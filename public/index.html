@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend zu Backend</title>
+</head>
+<body>
+    <h1>CPU-Minuten Rechner für Teams</h1>
+
+	<div class="input-group">
+        <label for="apiToken">API Token:</label>
+        <input type="password" id="apiToken" placeholder="CS_...">
+    </div>
+    
+    <div class="input-group">
+        <label for="teamId">Team ID:</label>
+        <input type="text" id="teamId" placeholder="z.B. 30093">
+    </div>
+    
+    <button onclick="holeDaten()">Jetzt berechnen</button>
+    
+    <p id="ergebnis" style="font-weight: bold; color: blue;"></p>
+
+    <script>
+        async function holeDaten() {
+            try {
+
+				const apiToken = document.getElementById('apiToken').value.trim();
+            	const teamId = document.getElementById('teamId').value.trim();
+				const now = new Date().toISOString().split('T')[0];
+
+				let itemsToCheck = 1;
+
+				const limit = 99;
+
+				let result = 0;
+
+				let offset = 0;
+
+				while (offset < itemsToCheck) {
+		            const url2 = `https://codesphere.com/api/usage/teams/${teamId}/resources/landscape-service/summary?beginDate=1970-01-01&endDate=${now}&limit=${limit}&offset=${offset}`;
+
+					console.log(`URL: ${url2}`);
+		
+		            const response2 = await fetch(url2, {
+		                headers: { 'accept': 'application/json', 'Authorization': `Bearer ${apiToken}` }
+		            });
+		            const data2 = await response2.json();
+
+					if (!data2.totalItems) {
+						throw new Error();
+					}
+
+					itemsToCheck = Number(data2.totalItems);
+
+		            const intermediateResult = data2.summary.reduce((acc, s) => acc + Number(s.usageSeconds), 0);
+		            
+		            result += intermediateResult;
+
+		            offset += limit;
+
+		            document.getElementById('ergebnis').innerText = `Lade... (${Math.min(offset, itemsToCheck)} / ${itemsToCheck}) Usages`;
+		        }
+                
+                document.getElementById('ergebnis').innerText = `In Summe ${(result / 60).toFixed(1)} CPU-Minuten für Team ${teamId}`;
+            } catch (error) {
+                console.error('Fehler:', error);
+            }
+        }
+    </script>
+</body>
+</html>

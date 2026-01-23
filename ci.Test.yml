@@ -1,0 +1,42 @@
+schemaVersion: v0.2
+prepare:
+  steps:
+    - name: npm init -y
+      command: npm init -y
+    - name: npm install express
+      command: npm install express
+    - name: npm install cors
+      command: npm install cors
+test:
+  steps: []
+run:
+  service-2:
+    steps:
+      - name: npx serve public
+        command: npx serve public
+    plan: 8
+    replicas: 1
+    network:
+      ports:
+        - port: 3000
+          isPublic: false
+      paths:
+        - port: 3000
+          path: /
+          stripPath: true
+    env: {}
+  service-3:
+    steps:
+      - name: node server.js
+        command: node server.js
+    plan: 8
+    replicas: 1
+    network:
+      ports:
+        - port: 3000
+          isPublic: false
+      paths:
+        - port: 3000
+          path: /api
+          stripPath: true
+    env: {}
