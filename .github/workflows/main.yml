@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy
-        uses: codesphere-cloud/gh-action-deploy@main
+        uses: docker://ghcr.io/codesphere-cloud/codesphere-monorepo/integrations/github-action:niklas-fix-pr-f73c3fdc-4a49dbbe6c
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
