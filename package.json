@@ -10,8 +10,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.2.1"
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nbrodnicke/niklas-fiddle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nbrodnicke/niklas-fiddle/issues"
+  },
+  "homepage": "https://github.com/nbrodnicke/niklas-fiddle#readme",
   "description": ""
 }

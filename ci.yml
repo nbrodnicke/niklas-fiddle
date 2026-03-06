@@ -7,6 +7,8 @@ prepare:
       command: npm install express
     - name: npm install cors
       command: npm install cors
+    - name: npm install pg
+      command: npm install pg
 test:
   steps: []
 run:
@@ -27,6 +29,8 @@ run:
     env: {}
   service-3:
     steps:
+      - name: echo $password
+        command: echo $password
       - name: node server.js
         command: node server.js
     plan: 8
@@ -39,4 +43,23 @@ run:
         - port: 3000
           path: /api
           stripPath: true
-    env: {}
+    env:
+      password: ${{ vault.dbPassword }}
+      conn: https//${{ vault.dbPassword }}${{ workspace.id }}${{ team.id }}
+  pg:
+    provider:
+      name: postgres
+      version: v1
+    plan:
+      id: 0
+      parameters:
+        storage: 10000
+        cpu: 5
+        memory: 500
+    config:
+      version: "17.6"
+      userName: "app"         # WICHTIG: Darf nicht "postgres" heißen!
+      databaseName: "app"     # Darf "postgres" heißen, "app" ist aber sauberer
+    secrets:
+      userPassword: ${{ vault.dbPassword }}
+      superuserPassword: ${{ vault.dbPassword }}
